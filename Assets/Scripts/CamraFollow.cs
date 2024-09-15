@@ -3,7 +3,7 @@ using UnityEngine;
 public class CamraFollow : MonoBehaviour
 {
     [SerializeField] private Transform player;
-    [SerializeField] private float speed = 5f;
+    [SerializeField] private float speed = 0.125f;
     private Vector3 offset;
 
     private void Start()
@@ -13,7 +13,13 @@ public class CamraFollow : MonoBehaviour
 
     private void LateUpdate()
     {
-        Vector3 targetPos = player.position + offset;
-        transform.position = Vector3.Lerp(transform.position, targetPos, Time.fixedDeltaTime * speed);
+        if (player != null)
+        {
+            Vector3 targetPos = player.position + offset;
+            Vector3 smoothedPosition = Vector3.Lerp(transform.position, targetPos, speed);
+            transform.position = smoothedPosition;
+        }
+
+       
     }
 }
