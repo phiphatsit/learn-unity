@@ -17,8 +17,21 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        movement.x = Input.GetAxisRaw("Horizontal");
-        movement.y = Input.GetAxisRaw("Vertical");
+        if (SceneManager.sceneCount < 2)
+        {
+            movement.x = Input.GetAxisRaw("Horizontal");
+            movement.y = Input.GetAxisRaw("Vertical");
+        }
+        else
+        {
+            movement = Vector2.zero;
+        }
+        
+
+        if (Input.GetKeyDown(KeyCode.Escape) && SceneManager.sceneCount > 1)
+        {
+            SceneManager.UnloadSceneAsync(combatScene);
+        }
 
         /*if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
         {
@@ -48,9 +61,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Pokemon"))
+        if (collision.gameObject.CompareTag("Pokemon") && SceneManager.sceneCount < 2)
         {
-            SceneManager.LoadScene(combatScene);
+            GameManager.Instance.pokemon = collision.gameObject.GetComponent<Pokemon>();
+            SceneManager.LoadScene(combatScene, LoadSceneMode.Additive);
         }
     }
 }
